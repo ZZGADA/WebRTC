@@ -1,0 +1,24 @@
+# Node.js dependencies
+./basic_sample/ws_server/node_js/node_modules
+./basic_sample/ws_server/node_js/package-lock.json
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+
+# Build output
+dist/
+build/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE/editor specific files
+.vscode/
+.idea/
+*.swp
