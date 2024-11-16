@@ -1,6 +1,9 @@
 const fs = require('fs');
 const https = require('https');
 const WebSocket = require('ws');
+// 忽略SSL证书错误
+https.globalAgent.options.rejectUnauthorized = false;
+
 
 // 读取 SSL 证书和密钥
 const serverOptions = {
@@ -48,6 +51,7 @@ wss.on('connection', function connection(ws, req) {
 
 // 监听指定端口
 const PORT = 53378;
-server.listen(PORT, function() {
-  console.log(`Signaling server is running on wss://0.0.0.0:${PORT}`);
+const HOST = '0.0.0.0';
+server.listen(PORT, HOST, function() {
+  console.log(`Signaling server is running on wss://${HOST}:${PORT}`);
 });
