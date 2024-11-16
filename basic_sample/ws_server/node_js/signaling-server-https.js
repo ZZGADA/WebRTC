@@ -1,9 +1,20 @@
+const fs = require('fs');
+const https = require('https');
 const WebSocket = require('ws');
 
-// 创建 WebSocket 服务器并监听 0.0.0.0:53378
-const wss = new WebSocket.Server({ host: '0.0.0.0', port: 53378 });
+// 读取 SSL 证书和密钥
+const serverOptions = {
+  cert: fs.readFileSync('cert.pem'),
+  key: fs.readFileSync('key.pem')
+};
 
-wss.on('connection', function connection(ws,req) {
+// 创建 HTTPS 服务器
+const server = https.createServer(serverOptions);
+
+// 创建 WebSocket 服务器并绑定到 HTTPS 服务器
+const wss = new WebSocket.Server({ server });
+
+wss.on('connection', function connection(ws, req) {
   console.log('A new client connected');
   const ip = req.socket.remoteAddress;
   const port = req.socket.remotePort;
@@ -35,4 +46,8 @@ wss.on('connection', function connection(ws,req) {
   });
 });
 
-console.log('Signaling server is running on ws://0.0.0.0:53378');
+// 监听指定端口
+const PORT = 53378;
+server.listen(PORT, function() {
+  console.log(`Signaling server is running on wss://0.0.0.0:${PORT}`);
+});
