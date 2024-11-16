@@ -1,7 +1,7 @@
 const localVideo = document.getElementById('localVideo');
 const remoteVideo = document.getElementById('remoteVideo');
 const connectButton = document.getElementById('connectButton');
-const signalingServer = new WebSocket('ws://localhost:53378');
+const signalingServer = new WebSocket('ws://8.130.14.29:53378');
 let localStream;
 let peerConnection;
 const configuration = {

@@ -6,7 +6,8 @@ const wss = new WebSocket.Server({ host: '0.0.0.0', port: 53378 });
 wss.on('connection', function connection(ws,req) {
   console.log('A new client connected');
   const ip = req.socket.remoteAddress;
-  console.log(`New client connected from IP: ${ip}`);
+  const port = req.socket.remotePort;
+  console.log(`New client connected from IP: ${ip} PORT:${port}`);
 
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);
