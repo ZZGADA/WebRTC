@@ -1,4 +1,7 @@
+const https = require('https');
 const WebSocket = require('ws');
+// 忽略SSL证书错误
+https.globalAgent.options.rejectUnauthorized = false;
 
 // 创建 WebSocket 服务器并监听 0.0.0.0:53378
 const wss = new WebSocket.Server({ host: '0.0.0.0', port: 53378 });

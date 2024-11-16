@@ -1,14 +1,14 @@
 const fs = require('fs');
 const https = require('https');
-const WebSocket = require('ws');
 // 忽略SSL证书错误
-https.globalAgent.options.rejectUnauthorized = false;
-
+// https.globalAgent.options.rejectUnauthorized = false;
+const WebSocket = require('ws');
 
 // 读取 SSL 证书和密钥
 const serverOptions = {
   cert: fs.readFileSync('cert.pem'),
-  key: fs.readFileSync('key.pem')
+  key: fs.readFileSync('key.pem'),
+  passphrase: 'zZ-szshyjbz16D'
 };
 
 // 创建 HTTPS 服务器
