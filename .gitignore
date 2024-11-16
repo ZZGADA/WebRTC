@@ -1,6 +1,6 @@
 # Node.js dependencies
-./basic_sample/ws_server/node_js/node_modules
-./basic_sample/ws_server/node_js/package-lock.json
+basic_sample/ws_server/node_js/node_modules
+basic_sample/ws_server/node_js/package-lock.json
 
 # Logs
 logs/
