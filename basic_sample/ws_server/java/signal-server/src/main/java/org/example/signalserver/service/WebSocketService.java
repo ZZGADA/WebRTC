@@ -1,5 +1,6 @@
 package org.example.signalserver.service;
 
+import org.example.signalserver.entity.dto.InitBindDTO;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.Map;
@@ -9,7 +10,7 @@ public interface WebSocketService {
     /**
      * 添加 session
      */
-    void add(String key, WebSocketSession session);
+    void add(WebSocketSession session, InitBindDTO initBindDTO);
 
     /**
      * 删除 session,会返回删除的 session
@@ -27,5 +28,5 @@ public interface WebSocketService {
      */
     WebSocketSession get(String key);
 
-    Map<String,WebSocketSession> getSchoolClassRoomAllSession();
+    Map<String,WebSocketSession> getClassRoomAllSessionByClassId(Integer classRoomId);
 }

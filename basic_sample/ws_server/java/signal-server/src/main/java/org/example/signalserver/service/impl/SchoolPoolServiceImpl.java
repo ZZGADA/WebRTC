@@ -1,41 +1,59 @@
 package org.example.signalserver.service.impl;
 
-import org.example.signalserver.entity.po.SpecificLocationPO;
 import org.example.signalserver.pool.SchoolPool;
+import org.example.signalserver.pool.layer.Layer;
 import org.example.signalserver.pool.layer.SchoolLayer;
+import org.example.signalserver.service.SchoolPoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.WebSocketSession;
 
+import java.util.HashSet;
 
 
 @Service
-public class SchoolPoolServiceImpl {
+public class SchoolPoolServiceImpl implements SchoolPoolService {
     @Autowired
     private SchoolPool schoolPool;
 
-
-    SchoolPoolServiceImpl(){}
-
-
     /**
-     * 根据学校id找schoolLayer
+     * 学校是否存在
      */
-    public SchoolLayer get(WebSocketSession session, SpecificLocationPO locationPO){
+    @Override
+    public boolean ifHasSchool(int schoolId) {
+        return schoolPool.pools.containsKey(schoolId);
+    }
 
-        return null;
+    @Override
+    public void initSchoolLayer(int schoolId) {
+        if(!ifHasSchool(schoolId)) {
+            // 如果没有
+            synchronized (this){
+                // 双重确认
+                if(!ifHasSchool(schoolId)) {
+                    SchoolLayer schoolLayer = new SchoolLayer(new HashSet<>());
+                    schoolPool.pools.put(schoolId, schoolLayer);
+                }
+            }
+        }
     }
 
 
     /**
-     * 将
-     * @param session
-     * @param locationPO
-     * @return
+     * 加入教学楼id
      */
-    public boolean putSchoolIntoPool(WebSocketSession session, SpecificLocationPO locationPO){
-        schoolPool.pools.put()
+    @Override
+    public void bindBuildingId(int schoolId, int buildingId) {
+        if(!ifHasSchool(schoolId)) {
+            initSchoolLayer(schoolId);
+        }
 
-        return true;
+        SchoolLayer schoolLayer = (SchoolLayer) getLayerById(schoolId);
+        schoolLayer.getBuildingIdSet().add(buildingId);
+    }
+
+
+    @Override
+    public Layer getLayerById(Integer id) {
+        return this.schoolPool.pools.get(id);
     }
 }

@@ -1,6 +1,7 @@
 package org.example.signalserver.config;
 
 import org.example.signalserver.handler.WebSocketBroadcastHandler;
+import org.example.signalserver.handler.WebSocketInitHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -13,7 +14,10 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 public class WebSocketConfig implements WebSocketConfigurer {
 
     @Autowired
-    private WebSocketBroadcastHandler webSocketHandler;
+    private WebSocketBroadcastHandler webSocketBroadcastHandler;
+
+    @Autowired
+    private WebSocketInitHandler webSocketInitHandler;
 
     /**
      * 注册一个 WebSocket 处理程序
@@ -24,7 +28,11 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         // 添加广播socket
-        registry.addHandler(webSocketHandler, "/signal/p2p/broadcast").
+        registry.addHandler(webSocketBroadcastHandler, "/signal").
+                setAllowedOrigins("*");
+
+        // 添加初始化socket
+        registry.addHandler(webSocketInitHandler,"/init").
                 setAllowedOrigins("*");
     }
 }

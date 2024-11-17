@@ -1,14 +1,15 @@
 package org.example.signalserver.pool.layer;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.Map;
 
 
-
 @Data
-public class ClassRoomLayer {
-    private Integer classRoomId;
-    public Map<String, WebSocketSession> studentSessionPool;
+@AllArgsConstructor
+public class ClassRoomLayer extends Layer{
+    // session id 和 session的关系 一对一
+    private Map<String, WebSocketSession> sessionMap;
 }

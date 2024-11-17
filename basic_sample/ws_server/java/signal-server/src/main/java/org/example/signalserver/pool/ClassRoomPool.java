@@ -1,6 +1,7 @@
 package org.example.signalserver.pool;
 
 
+import lombok.Data;
 import org.example.signalserver.pool.layer.ClassRoomLayer;
 
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * key：教室id
  * value：ClassRoomLayer
  */
+@Data
 public class ClassRoomPool {
     Map<Integer, ClassRoomLayer> pools;
 

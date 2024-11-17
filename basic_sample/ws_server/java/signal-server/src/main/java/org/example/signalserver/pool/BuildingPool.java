@@ -2,7 +2,6 @@ package org.example.signalserver.pool;
 
 import lombok.Data;
 import org.example.signalserver.pool.layer.BuildingLayer;
-import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

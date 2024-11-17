@@ -4,7 +4,7 @@
   "main": "webrtcSignal.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "live-server --host=0.0.0.0 --entry-file=webRtc.html --port=53221"
+    "start": "live-server --host=localhost --entry-file=./peer_to_peer/index.html --port=53221"
   },
   "keywords": [],
   "author": "",

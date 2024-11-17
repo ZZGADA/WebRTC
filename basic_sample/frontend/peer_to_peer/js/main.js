@@ -15,10 +15,46 @@ hangupButton.disabled = true;
 const localVideo = document.getElementById('localVideo');
 const remoteVideo = document.getElementById('remoteVideo');
 
+const configuration = {
+  iceServers: [
+    {
+      urls: 'stun:8.130.14.29:53478',
+      username: 'ZZGEDA',
+      credential: 'zZ-szshyjbz16D',
+      realm: 'ZZGEDA.com'
+    }
+  ]
+};
+
 let pc;
 let localStream;
 
-const signaling = new BroadcastChannel('webrtc');
+const signalingInit = new WebSocket('ws://localhost:18081/init')
+const signaling = new WebSocket('ws://localhost:18081/signal')
+signaling.onopen = function() {
+  tellServerClientInformation()
+}
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function tellServerClientInformation() {
+  const data = {
+    schoolId: 2281,
+    buildingId: 22810,
+    classRoomId: 228100,
+  }
+
+  const message = {
+    tyep : 'init',
+    data : data
+  }
+
+  signalingInit.send(JSON.stringify(message));
+}
+
+
 signaling.onmessage = e => {
   if (!localStream) {
     console.log('not ready yet');
@@ -54,19 +90,19 @@ signaling.onmessage = e => {
 };
 
 startButton.onclick = async () => {
-  localStream = await navigator.mediaDevices.getUserMedia({audio: true, video: true});
+  localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
   localVideo.srcObject = localStream;
 
 
   startButton.disabled = true;
   hangupButton.disabled = false;
 
-  signaling.postMessage({type: 'ready'});
+  signaling.send(JSON.stringify({ type: 'ready' }));
 };
 
 hangupButton.onclick = async () => {
   hangup();
-  signaling.postMessage({type: 'bye'});
+  signaling.send(JSON.stringify({ type: 'bye' }));
 };
 
 async function hangup() {
@@ -81,7 +117,7 @@ async function hangup() {
 };
 
 function createPeerConnection() {
-  pc = new RTCPeerConnection();
+  pc = new RTCPeerConnection(configuration);
   pc.onicecandidate = function iceCallback(e) {
     const message = {
       type: 'candidate',
@@ -93,7 +129,7 @@ function createPeerConnection() {
       message.sdpMLineIndex = e.candidate.sdpMLineIndex;
     }
     console.log('onicecandidate的回调函数执行', message);
-    signaling.postMessage(message);
+    signaling.send(JSON.stringify(message));
   };
   pc.ontrack = e => remoteVideo.srcObject = e.streams[0];
   localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
@@ -101,12 +137,12 @@ function createPeerConnection() {
 
 async function makeCall() {
   console.log('start ====> createPeerConnection');
-  await createPeerConnection();
+  createPeerConnection();
   console.log('end <==== createPeerConnection');
 
-  
+
   const offer = await pc.createOffer();
-  signaling.postMessage({type: 'offer', sdp: offer.sdp});
+  signaling.send(JSON.stringify({ type: 'offer', sdp: offer.sdp }));
   console.log('发送offer', JSON.stringify(offer));
 
 
@@ -119,13 +155,15 @@ async function handleOffer(offer) {
     console.error('existing peerconnection');
     return;
   }
-  await createPeerConnection();
+  createPeerConnection();
   await pc.setRemoteDescription(offer);
   console.log('接收offer setRemoteDescription');
 
   const answer = await pc.createAnswer();
-  signaling.postMessage({type: 'answer', sdp: answer.sdp});
+  signaling.send(JSON.stringify({ type: 'answer', sdp: answer.sdp }));
   console.log('创建answer, 向对端返回自己的sdp信息');
+
+
   await pc.setLocalDescription(answer);
 }
 

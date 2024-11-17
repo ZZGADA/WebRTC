@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class BindDTO {
-    private Integer schoolId;
-    private Integer buildingId;
-    private Integer classRoomId;
+    private int schoolId;
+    private int buildingId;
+    private int classRoomId;
 }

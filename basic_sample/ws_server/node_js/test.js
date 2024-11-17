@@ -1,17 +1,21 @@
 const WebSocket = require('ws');
 
-const socket = new WebSocket('wss://0.0.0.0:53378');
+const socket = new WebSocket('ws://0.0.0.0:18081/init');
 
 socket.on('open', function open() {
     console.log('WebSocket is open now.');
-    // 创建一个 JSON 对象
-    const message = {
-        type: 'greeting',
-        content: 'Hello Server!',
-        timestamp: new Date().toISOString()
-    };
+    const data = {
+        schoolId: 2281,
+        buildingId: 22810,
+        classRoomId: 228100,
+    }
 
-    // 将 JSON 对象序列化为字符串并发送
+    const message = {
+        tyep: 'init',
+        data: data
+    }
+
+    console.log(JSON.stringify(message));
     socket.send(JSON.stringify(message));
 });
 
