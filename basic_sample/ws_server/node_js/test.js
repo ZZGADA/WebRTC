@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 
-const socket = new WebSocket('wss://0.0.0.0:53378', { rejectUnauthorized: false });
+const socket = new WebSocket('wss://0.0.0.0:53378');
 
 socket.on('open', function open() {
     console.log('WebSocket is open now.');
