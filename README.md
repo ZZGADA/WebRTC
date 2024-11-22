@@ -27,6 +27,11 @@
 	   a. socket连接产生的WebSocketSession对象会存在内存中，此时会有fd标识这一个对象。我们将sessionId和fd绑定为key-value。   
 	   b. 然后在redis中设置一个room的房间概念。   
 	   c. 根据房间id和学生id（或者是客户端ip，一切可以标识客户端设备的id都行）在一个pod中找到对应客户端唯一标识。    
-		d. 如果没有挂载，那么可以在每一个pod中写一个http接口，通过接口实现多个pod的通信，进而将信令消息转发给其他pod，然后对应的pod又可以直接获取WebSocketSession对象进行转发，从而实现分布式架构下的signal信令转发。   
+		d. 如果没有挂载，那么可以在每一个pod中写一个http接口，通过接口实现多个pod的通信，进而将信令消息转发给其他pod，然后对应的pod又可以直接获取WebSocketSession对象进行转发，从而实现分布式架构下的signal信令转发。  
+3. 核心关键点：
+   * pod 服务本身应该是无状态容器，但是WebSocket连接对象是有状态的。所以需要将这些有状态对象进行抽离，从而使得整个pod变成无状态容器。   
+   * 将数据中心化，使用redis    
+   * 每次连接 设置ack 返回连接确认状态    
+   * service 路由的时候 使用loadbalance。此时WebSocket连接如何合理的分配到不同的pod上是需要优化的。service本身的allocate算法需要进行优化，让每个pod的连接数变得平均 
 
  	   
